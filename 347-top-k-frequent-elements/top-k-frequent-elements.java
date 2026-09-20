@@ -1,55 +1,66 @@
 import java.util.*;
 
 class Pair {
-    int first;
-    int second;
+    int first;   // frequency
+    int second;  // number
 
-    Pair(int first, int second) {
-        this.first = first;
-        this.second = second;
+    Pair(int f, int s) {
+        first = f;
+        second = s;
     }
 }
 
 class Solution {
+
+    // Min heap on first, Min on second
+    static Comparator<Pair> minMin = (a, b) -> {
+        if (a.first != b.first)
+            return Integer.compare(a.first, b.first);
+        return Integer.compare(a.second, b.second);
+    };
+
+    // Min heap on first, Max on second
+    static Comparator<Pair> minMax = (a, b) -> {
+        if (a.first != b.first)
+            return Integer.compare(a.first, b.first);
+        return Integer.compare(b.second, a.second);
+    };
+
+    // Max heap on first, Min on second
+    static Comparator<Pair> maxMin = (a, b) -> {
+        if (a.first != b.first)
+            return Integer.compare(b.first, a.first);
+        return Integer.compare(a.second, b.second);
+    };
+
+    // Max heap on first, Max on second
+    static Comparator<Pair> maxMax = (a, b) -> {
+        if (a.first != b.first)
+            return Integer.compare(b.first, a.first);
+        return Integer.compare(b.second, a.second);
+    };
+
     public int[] topKFrequent(int[] nums, int k) {
-
-        HashMap<Integer, Integer> hm = new HashMap<>();
-
-        for (int x : nums) {
-            hm.put(x, hm.getOrDefault(x, 0) + 1);
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int n : nums) {
+            map.put(n, map.getOrDefault(n, 0) + 1);
         }
 
-        PriorityQueue<Pair> pq = new PriorityQueue<>(
-            (a, b) -> a.second - b.second
-        );
+        // For top K frequent we need a MIN heap on first (frequency),
+        // so the least frequent is on top and gets evicted.
+        PriorityQueue<Pair> pq = new PriorityQueue<>(minMin);
 
-        Iterator<Map.Entry<Integer, Integer>> it = hm.entrySet().iterator();
-
-        // First k pairs
-        for (int i = 0; i < k; i++) {
-            Map.Entry<Integer, Integer> entry = it.next();
-            pq.add(new Pair(entry.getKey(), entry.getValue()));
-        }
-
-        // Remaining pairs
-        while (it.hasNext()) {
-            Map.Entry<Integer, Integer> entry = it.next();
-
-            int element = entry.getKey();
-            int freq = entry.getValue();
-
-            if (freq > pq.peek().second) {
+        for (Map.Entry<Integer, Integer> e : map.entrySet()) {
+            pq.offer(new Pair(e.getValue(), e.getKey()));
+            if (pq.size() > k) {
                 pq.poll();
-                pq.add(new Pair(element, freq));
             }
         }
 
-        int[] ans = new int[k];
-
+        int[] res = new int[k];
         for (int i = 0; i < k; i++) {
-            ans[i] = pq.poll().first;
+            res[i] = pq.poll().second;
         }
-
-        return ans;
+        return res;
     }
 }
