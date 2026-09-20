@@ -19,3 +19,22 @@ class Solution {
         
     }
 }
+/**
+we want kth largest , ---> use min heap 
+take k size elements from array and put in min heap
+then compare remaining eleements
+if peek()<arr[i] replace pollelement from heap and add arr[i]
+return the top
+
+
+
+
+in java we use
+pq.add()
+pq.poll()
+pq.peek()
+
+
+
+
+ */
