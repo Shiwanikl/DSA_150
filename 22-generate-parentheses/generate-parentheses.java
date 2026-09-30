@@ -1,22 +1,33 @@
 class Solution {
-    public List<String> generateParenthesis(int n) {
-        List<String> ans = new ArrayList<>();
-        fun("", 0, 0, n, ans);
-        return ans;
-    }
+    public void fun(int open, int close, StringBuilder temp, List<String> res, int n) {
 
-    void fun(String s, int open, int close, int n, List<String> ans) {
-        if (s.length() == 2 * n) {
-            ans.add(s);
+        // base case
+        if (open == n && close == n) {
+            res.add(temp.toString());
             return;
         }
 
+        // add opening bracket
         if (open < n) {
-            fun(s + "(", open + 1, close, n, ans);
+            temp.append('(');
+            fun(open + 1, close, temp, res, n);
+            temp.deleteCharAt(temp.length() - 1);
         }
 
+        // add closing bracket
         if (close < open) {
-            fun(s + ")", open, close + 1, n, ans);
+            temp.append(')');
+            fun(open, close + 1, temp, res, n);
+            temp.deleteCharAt(temp.length() - 1);
         }
+    }
+
+    public List<String> generateParenthesis(int n) {
+        List<String> res = new ArrayList<>();
+        StringBuilder temp = new StringBuilder();
+
+        fun(0, 0, temp, res, n);
+
+        return res;
     }
 }
