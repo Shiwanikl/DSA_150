@@ -30,3 +30,7 @@ class Solution {
         secondwrong.val = temp;
     }
 }
+/* 
+first initate three tree nodes
+prev store the last elemnt visisted 
+for left recursion iif that prev is less than my root its fine , update the prev to the root , if prev is > root, we got hte first and second worng nodes , get them and just swap them using the temp var*/
